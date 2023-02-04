@@ -1,13 +1,13 @@
 package com.example.accountmanagementsystem.entity;
 
-import com.example.accountmanagementsystem.entity.Enum.Status;
+import com.example.accountmanagementsystem.entity.Enum.EnumStatus;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name="Account")
 public class Account {
     @Id
-    @Column(name="id")
+    @Column(name="id", unique = true, nullable = false)
     private String id;
 
     @Column(name="name")
@@ -19,11 +19,12 @@ public class Account {
     @JoinColumn(name="token", referencedColumnName = "content")
     private Token token;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name="status")
-    private Status status;  // token and account status
+    private EnumStatus status;  // token and account status
 
 
-    public Account(String id, String name, Token token, Status status) {
+    public Account(String id, String name, Token token, EnumStatus status) {
         this.id = id;
         this.name = name;
         this.token = token;
@@ -58,11 +59,11 @@ public class Account {
         this.token = token;
     }
 
-    public Status getStatus() {
+    public EnumStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(EnumStatus status) {
         this.status = status;
     }
 

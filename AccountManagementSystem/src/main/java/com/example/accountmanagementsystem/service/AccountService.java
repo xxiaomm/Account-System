@@ -2,11 +2,10 @@ package com.example.accountmanagementsystem.service;
 
 
 import com.example.accountmanagementsystem.entity.Account;
-import com.example.accountmanagementsystem.entity.Enum.Status;
+import com.example.accountmanagementsystem.entity.Enum.EnumStatus;
 import com.example.accountmanagementsystem.entity.Token;
 import com.example.accountmanagementsystem.repository.JPAAccountRepository;
 import com.example.accountmanagementsystem.repository.JPATokenRepository;
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,33 +24,35 @@ public class AccountService {
     private TokenService tokenService;
 
 
-    public String registerAccount(String id, String name, String tokenContent, Status status) {
+    public String registerAccount(String id, String name, String tokenContent, String status) {
         Optional<Account> foundAccount = jpaAccountRepository.findById(id);
         if (foundAccount.isPresent() || !isValidTokenStatus(status))
             return "Existed account with the same id or Invalid token status!";
 
         Token token = new Token(tokenContent);
-        Account account = new Account(id, name, token, status);
+        EnumStatus s = EnumStatus.valueOf(status);
+        Account account = new Account(id, name, token, s);
 
         jpaAccountRepository.save(account);
+        System.out.println(jpaAccountRepository.getReferenceById(account.getId()).getStatus());
         return "Register account successfully with details: " + account +" !";
     }
 
 
 
-    public Status validateToken(Token token) {
-//        jpaAccountRepository. 
-        return Status.ACTIVE;
-    }
+//    public EnumStatus validateToken(Token token) {
+////        jpaAccountRepository.
+//        return EnumStatus.STATUS1;
+//    }
 
-    public Status getTokenStatus(String tokenContent) {
+    public EnumStatus getTokenStatus(String tokenContent) {
         Token token = tokenService.getToken(tokenContent);
         Account account = token.getAccount();
         return account.getStatus();
     }
 
     // update account for token status
-    public String updateAccount(Token token, Status status) {
+    public String updateAccount(Token token, EnumStatus status) {
         return "success!";
     }
 
@@ -62,9 +63,10 @@ public class AccountService {
 
 
 
-    public boolean isValidTokenStatus(Status status) {
-        for (Status s: Status.values()) {
-            if (!status.equals(s))
+    public boolean isValidTokenStatus(String status) {
+        EnumStatus st = EnumStatus.valueOf(status);
+        for (EnumStatus s: EnumStatus.values()) {
+            if (!s.equals(st))
                 continue;
             else return true;
         }

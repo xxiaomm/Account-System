@@ -1,7 +1,7 @@
 use db;
 
 drop table Account;
--- drop table Post_Status;
+drop table Post_Status;
 drop table Token;
 
 create table Token(
@@ -14,7 +14,8 @@ create table Account(
 	id varchar(255),
     name varchar(255),
     token varchar(255),
-    status varchar(255),
+--     status enum('ACTIVE','DELETED','DEACTIVATED','SUSPENDED'),
+    status int,
     primary key(id),
     foreign key(token) references Token (content)
 );

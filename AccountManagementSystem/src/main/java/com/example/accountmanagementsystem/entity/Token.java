@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Table(name="Token")
 public class Token {
     @Id
-    @Column(name="content")
+    @Column(name="content", unique = true, nullable = false)
     private String content;
 
     @Column(name="expired_date")

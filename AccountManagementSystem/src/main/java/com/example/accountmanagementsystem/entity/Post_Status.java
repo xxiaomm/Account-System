@@ -1,7 +1,7 @@
 package com.example.accountmanagementsystem.entity;
 
 
-import com.example.accountmanagementsystem.entity.Enum.Status;
+import com.example.accountmanagementsystem.entity.Enum.EnumStatus;
 import jakarta.persistence.*;
 
 
@@ -11,13 +11,13 @@ public class Post_Status {
 //    @OneToOne(cascade = CascadeType.ALL)
 //    @PrimaryKeyJoinColumn(name="token_content", referencedColumnName = "content")
     @Id
-    @Column(name="token_content")
+    @Column(name="token_content", unique = true, nullable = false)
     private String tokenContent;
 
     @Column(name="post_token_status")
-    private Status post_token_status;
+    private EnumStatus post_token_status;
 
-    public Post_Status(String tokenContent, Status post_token_status) {
+    public Post_Status(String tokenContent, EnumStatus post_token_status) {
         this.tokenContent = tokenContent;
         this.post_token_status = post_token_status;
     }
@@ -34,11 +34,11 @@ public class Post_Status {
         this.tokenContent = tokenContent;
     }
 
-    public Status getPost_token_status() {
+    public EnumStatus getPost_token_status() {
         return post_token_status;
     }
 
-    public void setPost_token_status(Status post_token_status) {
+    public void setPost_token_status(EnumStatus post_token_status) {
         this.post_token_status = post_token_status;
     }
 
