@@ -24,6 +24,14 @@ public class AccountService {
     private TokenService tokenService;
 
 
+    /**
+     * Register a new account: default token expired date is after 30 days.
+     * @param id
+     * @param name
+     * @param tokenContent
+     * @param status
+     * @return
+     */
     public String registerAccount(String id, String name, String tokenContent, String status) {
         Optional<Account> foundAccount = jpaAccountRepository.findById(id);
         if (foundAccount.isPresent() || !isValidTokenStatus(status))
@@ -34,16 +42,56 @@ public class AccountService {
         Account account = new Account(id, name, token, s);
 
         jpaAccountRepository.save(account);
-        System.out.println(jpaAccountRepository.getReferenceById(account.getId()).getStatus());
-        return "Register account successfully with details: " + account +" !";
+//        System.out.println(jpaAccountRepository.getReferenceById(account.getId()).getStatus());
+        return "Register account successfully!\n"
+                + "the details of account in DB is: \n"
+                + account;
+    }
+
+    /**
+     * Update account: according to the given token, change token status
+     * @param tokenContent
+     * @param status
+     * @return
+     */
+    public String updateAccount(String tokenContent, String status) {
+//        // also is ok
+//        Token token = jpaTokenRepository.getById(tokenContent);
+//        Optional<Account> foundAccount = jpaAccountRepository.findById(token.getAccount().getId());
+        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
+        if (!foundAccount.isPresent())
+            return "Account with such token does not existed.";
+        Account account = foundAccount.get();
+        account.setStatus(EnumStatus.valueOf(status));
+        jpaAccountRepository.save(account);
+
+        return "Update account successfully with status " + status +" !";
+    }
+
+    //
+
+    /**
+     * Delete account: only change status to DELETED, not really remove it from database
+     * @param tokenContent
+     * @return
+     */
+    public String deleteAccount(String tokenContent) {
+        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
+        if (!foundAccount.isPresent())
+            return "Account with such token does not existed.";
+        Account account = foundAccount.get();
+        account.setStatus(EnumStatus.DELETED);
+        jpaAccountRepository.save(account);
+
+        return "Delete account successfully!";
     }
 
 
+    public EnumStatus validateToken(String name, String tokenContent) {
 
-//    public EnumStatus validateToken(Token token) {
-////        jpaAccountRepository.
-//        return EnumStatus.STATUS1;
-//    }
+//        jpaAccountRepository.
+        return EnumStatus.ACTIVE;
+    }
 
     public EnumStatus getTokenStatus(String tokenContent) {
         Token token = tokenService.getToken(tokenContent);
@@ -51,24 +99,12 @@ public class AccountService {
         return account.getStatus();
     }
 
-    // update account for token status
-    public String updateAccount(Token token, EnumStatus status) {
-        return "success!";
-    }
-
-    // only change status to DELETED, not really remove it from database
-    public String deleteAccount(Token token) {
-        return "success!";
-    }
-
-
-
     public boolean isValidTokenStatus(String status) {
-        EnumStatus st = EnumStatus.valueOf(status);
+//        EnumStatus st = EnumStatus.valueOf(status);
         for (EnumStatus s: EnumStatus.values()) {
-            if (!s.equals(st))
-                continue;
-            else return true;
+//            System.out.println(s.name());
+            if (s.name().equals(status))
+                return true;
         }
         return false;
     }

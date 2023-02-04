@@ -15,8 +15,9 @@ import java.util.List;
 @Repository
 public interface JPAAccountRepository extends JpaRepository<Account, String> {
 
-    public List<Account> findByStatus(EnumStatus status);
-//    @Query(value="select acct from Account acct where acct.token = :token")
-//    Account findAccountByToken(@Param("token") Token token);
+//    public List<Account> findByStatus(EnumStatus status);
+
+    @Query(value="select acct from Account acct where acct.token.content = :token")
+    Account findAccountByToken(@Param("token") String tokenContent);
 
 }

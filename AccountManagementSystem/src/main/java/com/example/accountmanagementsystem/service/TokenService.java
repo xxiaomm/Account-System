@@ -13,8 +13,11 @@ public class TokenService {
     @Autowired
     private JPATokenRepository jpaTokenRepository;
 
+
     public Token getToken(String tokenContent) {
-        return jpaTokenRepository.getReferenceById(tokenContent);
+        Token token = jpaTokenRepository.getById(tokenContent);
+        System.out.println(token);
+        return token;
     }
 
 }
