@@ -3,7 +3,6 @@ package com.example.accountmanagementsystem.service;
 
 import com.example.accountmanagementsystem.entity.Account;
 import com.example.accountmanagementsystem.entity.Enum.EnumPostStatus;
-import com.example.accountmanagementsystem.entity.Enum.EnumStatus;
 import com.example.accountmanagementsystem.entity.Post_Status;
 import com.example.accountmanagementsystem.repository.JPAAccountRepository;
 import com.example.accountmanagementsystem.repository.JPAPostStatusRepository;
@@ -29,7 +28,7 @@ public class ConsumerService {
 
 
 
-//    @KafkaListener(topics = "matchTokenAndStorePostStatus")
+    @KafkaListener(topics = "validateTokenAndStorePostStatus")
     public String validateTokenAndStorePostStatus(String tokenContent) {
         Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
         if (!foundAccount.isPresent()) {
