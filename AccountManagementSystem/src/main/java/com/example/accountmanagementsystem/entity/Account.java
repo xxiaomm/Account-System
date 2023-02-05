@@ -3,10 +3,20 @@ package com.example.accountmanagementsystem.entity;
 import com.example.accountmanagementsystem.entity.Enum.EnumStatus;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
+/** reference
+ * https://www.youtube.com/watch?v=o6tJM7jW69s
+ * https://www.youtube.com/watch?v=bFdMrNwBFo4
+ * https://www.youtube.com/watch?v=DpgI1xialn0
+ * https://www.youtube.com/watch?v=eXyqVLSAP6Q
+ */
+
 @Entity
 @Table(name="Account")
 public class Account {
     @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id", unique = true, nullable = false)
     private String id;
 
@@ -24,8 +34,15 @@ public class Account {
     private EnumStatus status;  // token and account status
 
 
-    public Account(String id, String name, Token token, EnumStatus status) {
-        this.id = id;
+//    public Account(String id, String name, Token token, EnumStatus status) {
+//        this.id = id;
+//        this.name = name;
+//        this.token = token;
+//        this.status = status;
+//    }
+
+    public Account (String name, Token token, EnumStatus status) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.token = token;
         this.status = status;
@@ -35,13 +52,21 @@ public class Account {
 
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    //    public int getId() {
+//        return id;
+//    }
+//
+//    public void setId(int id) {
+//        this.id = id;
+//    }
 
     public String getName() {
         return name;

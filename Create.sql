@@ -12,6 +12,7 @@ create table Token(
 
 create table Account(
 	id varchar(255),
+-- 	id varchar(255) not null 
     name varchar(255),
     token varchar(255),
 --     status enum('ACTIVE','DELETED','DEACTIVATED','SUSPENDED'),
