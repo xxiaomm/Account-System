@@ -1,6 +1,7 @@
 package com.example.accountmanagementsystem.entity;
 
 
+import com.example.accountmanagementsystem.entity.Enum.EnumPostStatus;
 import com.example.accountmanagementsystem.entity.Enum.EnumStatus;
 import jakarta.persistence.*;
 
@@ -15,9 +16,9 @@ public class Post_Status {
     private String tokenContent;
 
     @Column(name="post_token_status")
-    private EnumStatus post_token_status;
+    private EnumPostStatus post_token_status;
 
-    public Post_Status(String tokenContent, EnumStatus post_token_status) {
+    public Post_Status(String tokenContent, EnumPostStatus post_token_status) {
         this.tokenContent = tokenContent;
         this.post_token_status = post_token_status;
     }
@@ -34,11 +35,11 @@ public class Post_Status {
         this.tokenContent = tokenContent;
     }
 
-    public EnumStatus getPost_token_status() {
+    public EnumPostStatus getPost_token_status() {
         return post_token_status;
     }
 
-    public void setPost_token_status(EnumStatus post_token_status) {
+    public void setPost_token_status(EnumPostStatus post_token_status) {
         this.post_token_status = post_token_status;
     }
 

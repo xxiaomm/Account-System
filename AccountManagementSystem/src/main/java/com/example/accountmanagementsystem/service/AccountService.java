@@ -20,17 +20,11 @@ public class AccountService {
     // AOP: 25'10''; print -> inside code itself, can not see
     // log file -> shared -> info, warn, error, debug
     //得到日志对象
-    private static final Logger logger= LoggerFactory.getLogger(AccountService.class);
-//    private static final Logger logger2= LoggerFactory.getLogger("AccountService");
+    private final Logger logger= LoggerFactory.getLogger(AccountService.class);
 
 
     /**
      * Register a new account: default token expired date is after 30 days.
-     * @//param id
-     * @param name
-     * @param tokenContent
-     * @param status
-     * @return
      */
     public String registerAccount(String name, String tokenContent, String status) {
         if (!isValidTokenStatus(status)) {
@@ -49,9 +43,6 @@ public class AccountService {
 
     /**
      * Update account: according to the given token, change token status
-     * @param tokenContent
-     * @param status
-     * @return
      */
     public String updateAccount(String tokenContent, String status) {
 //        // also is ok
@@ -72,8 +63,6 @@ public class AccountService {
 
     /**
      * Delete account: only change status to DELETED, not really remove it from database
-     * @param tokenContent
-     * @return
      */
     public String deleteAccount(String tokenContent) {
         Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
@@ -91,8 +80,6 @@ public class AccountService {
 
     /**
      * Get token status with given token
-     * @param tokenContent
-     * @return
      */
 
     public String getTokenStatus(String tokenContent) {
@@ -108,17 +95,26 @@ public class AccountService {
     }
 
 
-    public EnumStatus validateToken(String name, String tokenContent) {
-
-//        jpaAccountRepository.
-        return EnumStatus.ACTIVE;
+    public String validateToken(String tokenContent, String status) {
+        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
+        if (!foundAccount.isPresent()) {
+            logger.warn("No matched account with given token!");
+//            return false;
+            return "No matched account with given token!";
+        }
+        Account account = foundAccount.get();
+        if (!account.getStatus().toString().equals(status)){
+            logger.warn("Status not matched!");
+//            return false;
+            return "Status not matched";
+        }
+//        return true;
+        return "Match status successfully";
     }
 
 
     public boolean isValidTokenStatus(String status) {
-//        EnumStatus st = EnumStatus.valueOf(status);
         for (EnumStatus s: EnumStatus.values()) {
-//            System.out.println(s.name());
             if (s.name().equals(status))
                 return true;
         }

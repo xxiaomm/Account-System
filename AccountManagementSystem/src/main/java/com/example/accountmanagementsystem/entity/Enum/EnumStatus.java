@@ -12,7 +12,9 @@ import java.util.stream.Stream;
 
 public enum EnumStatus {
     // status in database will be int, 0: ACTIVE, 1: DELETED, etc.
-    ACTIVE, DELETED, DEACTIVATED, SUSPENDED
+    ACTIVE, INACTIVE, DELETED, SUSPENDED
+
+//    DEACTIVATED,
 
 //    INACTIVE,
 //    STATUS1("ACTIVE"),
