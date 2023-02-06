@@ -31,12 +31,9 @@ public class AccountService {
     @Autowired
     private TokenService tokenService;
 
-    // AOP: 25'10''; print -> inside code itself, can not see
+    // AOP: 25'10''; print -> inside code itself, can not see -> log -> log file
     // log file -> shared -> info, warn, error, debug
-    //得到日志对象
     private Logger logger= LoggerFactory.getLogger(AccountService.class);
-
-
 
 
     /**
@@ -60,8 +57,8 @@ public class AccountService {
     /**
      * Update account: according to the given token, change token status
      */
-    public String updateAccount(String tokenContent, String status) {
-        String id = tokenService.getAccountId(tokenContent);
+    public String updateAccount(String token, String status) {
+        String id = tokenService.getAccountId(token);
         Optional<Account> foundAccount = jpaAccountRepository.findById(id);
         if (!foundAccount.isPresent()) {
             logger.warn("No matched account with given token!");
@@ -69,6 +66,11 @@ public class AccountService {
         }
 
         Account account = foundAccount.get();
+        if (!isValidTokenStatus(status)) {
+            logger.warn("Invalid status type, please check it!");
+            return "Invalid status type, please check it!\n"
+                    + "All valid status is ACTIVE, INACTIVE, DELETED and SUSPENDED.";
+        }
         account.setStatus(EnumStatus.valueOf(status));
         jpaAccountRepository.save(account);
         logger.info("Update account's status to "+status +" successfully!");
@@ -78,8 +80,8 @@ public class AccountService {
     /**
      * Delete account: only change status to DELETED, not really remove it from database
      */
-    public String deleteAccount(String tokenContent) {
-        String id = tokenService.getAccountId(tokenContent);
+    public String deleteAccount(String token) {
+        String id = tokenService.getAccountId(token);
         Optional<Account> foundAccount = jpaAccountRepository.findById(id);
         if (!foundAccount.isPresent()) {
             logger.warn("No matched account with given token!");
@@ -96,8 +98,8 @@ public class AccountService {
     /**
      * Get token status with given token
      */
-    public String getTokenStatus(String tokenContent) {
-        String id = tokenService.getAccountId(tokenContent);
+    public String getTokenStatus(String token) {
+        String id = tokenService.getAccountId(token);
         Optional<Account> foundAccount = jpaAccountRepository.findById(id);
         if (!foundAccount.isPresent()) {
             logger.error("Token does not exist");
@@ -110,8 +112,8 @@ public class AccountService {
     }
 
 
-//    public String validateToken(String tokenContent, String status) {
-//        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
+//    public String validateToken(String token, String status) {
+//        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(token));
 //        if (!foundAccount.isPresent()) {
 //            logger.warn("No matched account with given token!");
 ////            return false;
