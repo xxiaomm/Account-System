@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 public class ConsumerController {
 
     @Autowired
-    ConsumerService consumerService;
+    private ConsumerService consumerService;
 
-    @PutMapping(value="/store/post/status")
-    public String storePostStatus(@RequestParam(value="token") String tokenContent){
-        return consumerService.validateTokenAndStorePostStatus(tokenContent);
+    @PutMapping(value="/account/producer/validate/token")
+    public String validateToken(@RequestParam(value="token") String tokenContent){
+        return consumerService.validateToken(tokenContent);
     }
 }

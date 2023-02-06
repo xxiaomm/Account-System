@@ -10,6 +10,7 @@ import java.util.UUID;
  * https://www.youtube.com/watch?v=bFdMrNwBFo4
  * https://www.youtube.com/watch?v=DpgI1xialn0
  * https://www.youtube.com/watch?v=eXyqVLSAP6Q
+ * https://blog.csdn.net/careful_thebrave/article/details/124027847
  */
 
 @Entity
@@ -25,23 +26,32 @@ public class Account {
 
     // name is the name in current table Account Token,
     // referencedColumnName is the name of that in the table Token
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="token", referencedColumnName = "content")
-    private Token token;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name="token", referencedColumnName = "content")
+//    private Token token;
+
+    @Column(name="token")
+    private String token;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name="status")
     private EnumStatus status;  // token and account status
 
 
-//    public Account(String id, String name, Token token, EnumStatus status) {
-//        this.id = id;
-//        this.name = name;
-//        this.token = token;
-//        this.status = status;
-//    }
+    public Account(String name) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.token = null;
+        this.status = EnumStatus.ACTIVE;
+    }
 
-    public Account (String name, Token token, EnumStatus status) {
+    public Account(String name, EnumStatus status) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.status = status;
+    }
+
+    public Account (String name, String token, EnumStatus status) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.token = token;
@@ -76,11 +86,11 @@ public class Account {
         this.name = name;
     }
 
-    public Token getToken() {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(Token token) {
+    public void setToken(String token) {
         this.token = token;
     }
 

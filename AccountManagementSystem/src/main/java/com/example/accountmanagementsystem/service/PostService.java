@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
     @Autowired
-    JPAPostStatusRepository jpaPostStatusRepository;
+    private JPAPostStatusRepository jpaPostStatusRepository;
 
     public void storeStatus() {
 

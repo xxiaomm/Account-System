@@ -17,10 +17,10 @@ public class AccountController {
      * Register a new account, generate random id and corresponding token
      */
     @PostMapping(value="/register/account")
-    public String registerAccount(@RequestParam(value = "name")String name,
-                                  @RequestParam(value = "token") String tokenContent,
-                                  @RequestParam(value = "status") String status) {
-        return accountService.registerAccount(name, tokenContent, status);
+    public String registerAccount(@RequestParam(value = "name")String name){
+//                                  @RequestParam(value = "token") String tokenContent,
+//                                  @RequestParam(value = "status") String status) {
+        return accountService.registerAccount(name);
     }
 
 
@@ -46,11 +46,11 @@ public class AccountController {
         return accountService.getTokenStatus(tokenContent);
     }
 
-    @GetMapping(value="/validate/token")
-    public String validateToken(@RequestParam(value="token")String tokenContent,
-                                 @RequestParam(value="status")String status) {
-        return accountService.validateToken(tokenContent, status);
-    }
+//    @GetMapping(value="/validate/token")
+//    public String validateToken(@RequestParam(value="token")String tokenContent,
+//                                 @RequestParam(value="status")String status) {
+//        return accountService.validateToken(tokenContent, status);
+//    }
 
 
 }

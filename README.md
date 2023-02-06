@@ -26,3 +26,16 @@ Open another Terminal window and run the following command from the root of Apac
 ```
 ~/kafka_2.13-3.3.2/bin/kafka-server-start.sh ~/kafka_2.13-3.3.2/config/server.properties
 ```
+
+
+## Project details
+
+### MasterCardApp
+- producer: generate token and send it to AccountManagementSystem
+- consumer: get validated result
+
+### AccountManagementSystem
+- producer: receive token, store in Post_Status DB
+- consumer: get status from Post_Status DB, send to MasterCardApp
+
+

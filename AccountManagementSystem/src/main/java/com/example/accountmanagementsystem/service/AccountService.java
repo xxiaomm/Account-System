@@ -1,54 +1,68 @@
 package com.example.accountmanagementsystem.service;
 
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.example.accountmanagementsystem.entity.Account;
 import com.example.accountmanagementsystem.entity.Enum.EnumStatus;
-import com.example.accountmanagementsystem.entity.Token;
+//import com.example.accountmanagementsystem.entity.Token;
 import com.example.accountmanagementsystem.repository.JPAAccountRepository;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.util.Date;
 import java.util.Optional;
+
+
+/** reference
+ * https://www.cnblogs.com/ChromeT/p/10932202.html
+ * https://www.cnblogs.com/OnlyOne2048/p/14203654.html
+ */
 
 @Service
 public class AccountService {
 
     @Autowired
     private JPAAccountRepository jpaAccountRepository;
+
+    @Autowired
+    private TokenService tokenService;
+
     // AOP: 25'10''; print -> inside code itself, can not see
     // log file -> shared -> info, warn, error, debug
     //得到日志对象
-    private final Logger logger= LoggerFactory.getLogger(AccountService.class);
+    private Logger logger= LoggerFactory.getLogger(AccountService.class);
+
+
 
 
     /**
      * Register a new account: default token expired date is after 30 days.
+     * https://blog.csdn.net/qq_41450736/article/details/113523308
+     * https://blog.csdn.net/zhangchao19890805/article/details/79191177
      */
-    public String registerAccount(String name, String tokenContent, String status) {
-        if (!isValidTokenStatus(status)) {
-            logger.error("Invalid token status!");
-            return "Invalid token status!";
-        }
-
-        Token token = new Token(tokenContent);
-        EnumStatus s = EnumStatus.valueOf(status);
-        Account account = new Account(name, token, s);
+    public String registerAccount(String name){
+        Account account = new Account(name);
+        String id = account.getId();
+        account.setToken(tokenService.createToken(id, name));
 
         jpaAccountRepository.save(account);
         logger.info("The generated id is: " + account.getId());
-        return "Register account successfully with generated id " + account.getId();
+        return "Register account successfully with generated id " + account.getId()
+                +" the generated token is " + account.getToken();
     }
+
+
 
     /**
      * Update account: according to the given token, change token status
      */
     public String updateAccount(String tokenContent, String status) {
-//        // also is ok
-//        Token token = jpaTokenRepository.getById(tokenContent);
-//        Optional<Account> foundAccount = jpaAccountRepository.findById(token.getAccount().getId());
-        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
+        String id = tokenService.getAccountId(tokenContent);
+        Optional<Account> foundAccount = jpaAccountRepository.findById(id);
         if (!foundAccount.isPresent()) {
             logger.warn("No matched account with given token!");
             return "Account with such token does not exist.";
@@ -65,7 +79,8 @@ public class AccountService {
      * Delete account: only change status to DELETED, not really remove it from database
      */
     public String deleteAccount(String tokenContent) {
-        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
+        String id = tokenService.getAccountId(tokenContent);
+        Optional<Account> foundAccount = jpaAccountRepository.findById(id);
         if (!foundAccount.isPresent()) {
             logger.warn("No matched account with given token!");
             return "Account with such token does not exist.";
@@ -81,9 +96,9 @@ public class AccountService {
     /**
      * Get token status with given token
      */
-
     public String getTokenStatus(String tokenContent) {
-        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
+        String id = tokenService.getAccountId(tokenContent);
+        Optional<Account> foundAccount = jpaAccountRepository.findById(id);
         if (!foundAccount.isPresent()) {
             logger.error("Token does not exist");
             return "Token does not exist.";
@@ -95,22 +110,22 @@ public class AccountService {
     }
 
 
-    public String validateToken(String tokenContent, String status) {
-        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
-        if (!foundAccount.isPresent()) {
-            logger.warn("No matched account with given token!");
-//            return false;
-            return "No matched account with given token!";
-        }
-        Account account = foundAccount.get();
-        if (!account.getStatus().toString().equals(status)){
-            logger.warn("Status not matched!");
-//            return false;
-            return "Status not matched";
-        }
-//        return true;
-        return "Match status successfully";
-    }
+//    public String validateToken(String tokenContent, String status) {
+//        Optional<Account> foundAccount = Optional.ofNullable(jpaAccountRepository.findAccountByToken(tokenContent));
+//        if (!foundAccount.isPresent()) {
+//            logger.warn("No matched account with given token!");
+////            return false;
+//            return "No matched account with given token!";
+//        }
+//        Account account = foundAccount.get();
+//        if (!account.getStatus().toString().equals(status)){
+//            logger.warn("Status not matched!");
+////            return false;
+//            return "Status not matched";
+//        }
+////        return true;
+//        return "Match status successfully";
+//    }
 
 
     public boolean isValidTokenStatus(String status) {
@@ -120,5 +135,7 @@ public class AccountService {
         }
         return false;
     }
+
+
 
 }
