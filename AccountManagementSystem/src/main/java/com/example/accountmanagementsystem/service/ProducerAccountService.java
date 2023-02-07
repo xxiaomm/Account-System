@@ -1,6 +1,5 @@
 package com.example.accountmanagementsystem.service;
 
-import com.example.accountmanagementsystem.repository.JPAPostStatusRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,28 +8,28 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * - producer: receive token, store in Post_Status DB
+ * - producer: receive token, store in Pos_Status DB
  */
 @Service
 public class ProducerAccountService {
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-    @Autowired
-    private JPAPostStatusRepository jpaPostStatusRepository;
+    private KafkaTemplate <String, String> kafkaTemplate;
 
     @Autowired
-    private PostService postService;
+    private PosService posService;
 
     private final Logger logger= LoggerFactory.getLogger(ProducerAccountService.class);
 
 
-    // return status that read from Post_Status DB to MasterCardApp
-    public String sendStatusBack(String token) {
-        String status = postService.getPostStatus(token);
+    /**
+     * Send status back read from Pos_Status DB to MasterCardApp
+     */
+    public void sendStatusBack(String id, String name, String status) {
+        kafkaTemplate.send("sendIdBack", id);
+        kafkaTemplate.send("sendNameBack", name);
         kafkaTemplate.send("sendStatusBack", status);
         logger.info("Account system send back the status of given token to Master Card App successfully!");
-        return "Send status back successfully!";
     }
 
 }

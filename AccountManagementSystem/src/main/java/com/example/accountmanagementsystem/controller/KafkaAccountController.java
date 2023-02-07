@@ -15,16 +15,22 @@ public class KafkaAccountController {
     @Autowired
     private ProducerAccountService producerAccountService;
 
+
+
     @PutMapping(value="/account/producer/validate/token")
-    public String validateToken(@RequestParam(value="token") String tokenContent){
-        consumerAccountService.validateToken(tokenContent);
+    public String validateToken(@RequestParam(value="token") String token){
+        consumerAccountService.validateToken(token);
         return "Validate token and save post status successfully!";
     }
 
 
-    @GetMapping(value="/account/consumer/send/status")
-    public String sendStatusBack(@RequestParam(value="token") String token) {
-        return producerAccountService.sendStatusBack(token);
-    }
+    /**
+     * Send the token status back to the MasterCardApp,
+     * once finishing validate token and store status in Pos_Status DB.
+     */
+//    @GetMapping(value="/account/consumer/send/status")
+//    public String sendStatusBack(@RequestParam(value="token") String token) {
+//        return producerAccountService.sendStatusBack(token);
+//    }
 
 }

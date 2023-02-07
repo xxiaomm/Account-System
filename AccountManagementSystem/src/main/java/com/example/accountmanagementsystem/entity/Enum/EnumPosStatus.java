@@ -1,6 +1,6 @@
 package com.example.accountmanagementsystem.entity.Enum;
 
-public enum EnumPostStatus {
+public enum EnumPosStatus {
     ACTIVE,
     INACTIVE
 }

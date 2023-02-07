@@ -12,22 +12,20 @@ import org.springframework.web.bind.annotation.*;
 public class KafkaMasterController {
 
     @Autowired
-    private ConsumerMasterService consumerMasterService;
-
-    @Autowired
     private ProducerMasterService producerMasterService;
 
-    private Logger logger= LoggerFactory.getLogger(KafkaMasterController.class);
+    private final Logger logger= LoggerFactory.getLogger(KafkaMasterController.class);
 
+
+    /**
+     * Send token to AccountManagementSystem to validate.
+     */
     @PutMapping(value = "master/producer")
     public String sendMessage(@RequestParam("token") String token) {
         producerMasterService.sendTokenToAccount(token);
-        return "Send token from MasterCardApp to Account system!";
+        logger.info("Start sending token from MasterCardApp to Account system:");
+        return "Start sending token...";
     }
 
-//    @GetMapping(value="master/consumer")
-//    public String grabTokenStatus(@RequestParam("status") String status) {
-//        return customerService.grabTokenStatus(status);
-//    }
 
 }

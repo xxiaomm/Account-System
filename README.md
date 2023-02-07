@@ -1,6 +1,16 @@
 # Account-Management-System
-Final Project
+Final Project: Achieve a AccountManagementSystem and MasterCardApp, we can register a new account, then the system will generate a new id and a new unique token at the same time, when MasterCardApp send a token to AccountManagementSystem, it will validate the token in the DB and send the status back to the MasterCardApp.
 
+## Connect MySQL DB
+
+- Add MySQL dependency first.
+- Configure the application.properties like the following.
+
+```properties
+spring.datasource.url=jdbc:mysql://{Hostname}:{port}/{database}
+spring.datasource.username={username}
+spring.datasource.password={password}
+```
 
 ## Install Kafka
 
