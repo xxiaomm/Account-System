@@ -14,9 +14,9 @@ public class ProducerMasterService {
 
     private Logger logger= LoggerFactory.getLogger(ProducerMasterService.class);
 
-    public void sendToken (String token) {
+    public void sendTokenToAccount (String token) {
         logger.info("Master Card App send token to Account system!");
-        kafkaTemplate.send("sendToken", token);
+        kafkaTemplate.send("sendTokenToAccount", token);
     }
 
 }

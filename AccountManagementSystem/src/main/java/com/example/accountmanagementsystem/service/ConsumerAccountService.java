@@ -34,56 +34,57 @@ public class ConsumerAccountService {
     private final Logger logger= LoggerFactory.getLogger(ConsumerAccountService.class);
 
 
-    @KafkaListener(topics = "matchToken")
-    public String matchToken(String token) {
+//    @KafkaListener(topics = "matchToken")
+//    public String matchToken(String token) {
+//        String id = tokenService.getAccountId(token);
+//        Optional<Account>  foundAccount = jpaAccountRepository.findById(id);
+//        if (!foundAccount.isPresent()) {
+//            logger.warn("No matched account with given token!");
+//            return "No matched account with given token!";
+//        }
+//        Account account = foundAccount.get();
+//        System.out.println("Matched user is " + account);
+//        return "Matched user is "+ account;
+//    }
+//
+//    @KafkaListener(topics = "showStatus")
+//    public String showStatus(String token) {
+//        String id = tokenService.getAccountId(token);
+//        Optional<Account>  foundAccount = jpaAccountRepository.findById(id);
+//        Account account = foundAccount.get();
+//        System.out.println("Matched user's status is " + account.getStatus());
+//        return "Matched user's status is " + account.getStatus();
+//    }
+
+
+
+    @KafkaListener(topics = "sendTokenToAccount", groupId = "validateToken")
+    public void validateToken(String token) {
         String id = tokenService.getAccountId(token);
         Optional<Account>  foundAccount = jpaAccountRepository.findById(id);
         if (!foundAccount.isPresent()) {
             logger.warn("No matched account with given token!");
-            return "No matched account with given token!";
-        }
-        Account account = foundAccount.get();
-        System.out.println("Matched user is " + account);
-        return "Matched user is "+ account;
-    }
-
-    @KafkaListener(topics = "showStatus")
-    public String showStatus(String token) {
-        String id = tokenService.getAccountId(token);
-        Optional<Account>  foundAccount = jpaAccountRepository.findById(id);
-        Account account = foundAccount.get();
-        System.out.println("Matched user's status is " + account.getStatus());
-        return "Matched user's status is " + account.getStatus();
-    }
-
-
-
-//    @KafkaListener(topics = "sendTokenToAccount", groupId = "validateToken")
-    public String validateToken(String token) {
-        String id = tokenService.getAccountId(token);
-        Optional<Account>  foundAccount = jpaAccountRepository.findById(id);
-        if (!foundAccount.isPresent()) {
-            logger.warn("No matched account with given token!");
-            return "No matched account with given token!";
         }
         Account account = foundAccount.get();
         String status = account.getStatus().toString();
         logger.info("the matched account's status is " + status);
-        if (!isValidPostStatus(status)) {
-            logger.warn("invalid token status!");
-            return "invalid token status!";
-        }
 
-        Post_Status post_status = new Post_Status(token, EnumPostStatus.valueOf(status));
+        EnumPostStatus validStatus = EnumPostStatus.valueOf(getValidPostStatus(status));
+        Post_Status post_status = new Post_Status(token, validStatus);
         jpaPostStatusRepository.save(post_status);
 
         logger.info("Validate token and save post status successfully!");
-        return "Validate token and save post status successfully!";
+        System.out.println(post_status);
     }
 
 
-
-
+    public String getValidPostStatus(String status) {
+        for (EnumPostStatus s: EnumPostStatus.values()) {
+            if (s.name().equals(status))
+                return status;
+        }
+        return "INACTIVE";
+    }
 
     public boolean isValidPostStatus(String status) {
         for (EnumPostStatus s: EnumPostStatus.values()) {
@@ -92,6 +93,8 @@ public class ConsumerAccountService {
         }
         return false;
     }
+
+
 
 
 

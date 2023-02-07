@@ -27,8 +27,6 @@ public class ProducerAccountService {
 
     // return status that read from Post_Status DB to MasterCardApp
     public String sendStatusBack(String token) {
-//        Optional<Post_Status> foundObj = jpaPostStatusRepository.findById(token);
-//        String status = foundObj.get().getPost_token_status().toString();
         String status = postService.getPostStatus(token);
         kafkaTemplate.send("sendStatusBack", status);
         logger.info("Account system send back the status of given token to Master Card App successfully!");

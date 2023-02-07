@@ -17,7 +17,8 @@ public class KafkaAccountController {
 
     @PutMapping(value="/account/producer/validate/token")
     public String validateToken(@RequestParam(value="token") String tokenContent){
-        return consumerAccountService.validateToken(tokenContent);
+        consumerAccountService.validateToken(tokenContent);
+        return "Validate token and save post status successfully!";
     }
 
 

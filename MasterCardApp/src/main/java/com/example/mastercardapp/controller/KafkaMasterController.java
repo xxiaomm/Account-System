@@ -21,7 +21,7 @@ public class KafkaMasterController {
 
     @PutMapping(value = "master/producer")
     public String sendMessage(@RequestParam("token") String token) {
-        producerMasterService.sendToken(token);
+        producerMasterService.sendTokenToAccount(token);
         return "Send token from MasterCardApp to Account system!";
     }
 
