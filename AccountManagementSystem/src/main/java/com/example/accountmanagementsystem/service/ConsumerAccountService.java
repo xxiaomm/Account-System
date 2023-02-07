@@ -1,8 +1,6 @@
 package com.example.accountmanagementsystem.service;
 
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.accountmanagementsystem.entity.Account;
 import com.example.accountmanagementsystem.entity.Enum.EnumPostStatus;
 import com.example.accountmanagementsystem.entity.Post_Status;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 
@@ -23,7 +20,7 @@ import java.util.Optional;
  */
 
 @Service
-public class ConsumerService {
+public class ConsumerAccountService {
 
     @Autowired
     private JPAAccountRepository jpaAccountRepository;
@@ -34,14 +31,35 @@ public class ConsumerService {
     @Autowired
     private TokenService tokenService;
 
-
-    private final Logger logger= LoggerFactory.getLogger(AccountService.class);
-
+    private final Logger logger= LoggerFactory.getLogger(ConsumerAccountService.class);
 
 
-//    @KafkaListener(topics = "sendToken")
+    @KafkaListener(topics = "matchToken")
+    public String matchToken(String token) {
+        String id = tokenService.getAccountId(token);
+        Optional<Account>  foundAccount = jpaAccountRepository.findById(id);
+        if (!foundAccount.isPresent()) {
+            logger.warn("No matched account with given token!");
+            return "No matched account with given token!";
+        }
+        Account account = foundAccount.get();
+        System.out.println("Matched user is " + account);
+        return "Matched user is "+ account;
+    }
+
+    @KafkaListener(topics = "showStatus")
+    public String showStatus(String token) {
+        String id = tokenService.getAccountId(token);
+        Optional<Account>  foundAccount = jpaAccountRepository.findById(id);
+        Account account = foundAccount.get();
+        System.out.println("Matched user's status is " + account.getStatus());
+        return "Matched user's status is " + account.getStatus();
+    }
+
+
+
+//    @KafkaListener(topics = "sendTokenToAccount", groupId = "validateToken")
     public String validateToken(String token) {
-//        Account account = jpaAccountRepository.findAccountByToken(token);
         String id = tokenService.getAccountId(token);
         Optional<Account>  foundAccount = jpaAccountRepository.findById(id);
         if (!foundAccount.isPresent()) {

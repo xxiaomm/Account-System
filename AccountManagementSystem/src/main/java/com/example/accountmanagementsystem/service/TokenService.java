@@ -3,11 +3,6 @@ package com.example.accountmanagementsystem.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.accountmanagementsystem.entity.Account;
-//import com.example.accountmanagementsystem.entity.Token;
-//import com.example.accountmanagementsystem.repository.JPATokenRepository;
-import com.netflix.discovery.converters.Auto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -25,11 +20,11 @@ import java.util.Date;
 @Service
 public class TokenService {
 
-//    @Autowired
-//    private JPATokenRepository jpaTokenRepository;
+    /**
+     * Use HMAC256 algo to encode token: default expired_date is 30 days.
+     * reference: https://blog.csdn.net/weixin_30565199/article/details/95304668
+      */
 
-
-    // https://blog.csdn.net/weixin_30565199/article/details/95304668
     public String createToken(String id, String name) {
         // HMAC256加密算法, TOKEN_SECRET是用来加密数字签名的密钥。
         Algorithm algo = Algorithm.HMAC256("TOKEN_SECRET");

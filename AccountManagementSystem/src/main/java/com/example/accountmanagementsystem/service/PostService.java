@@ -10,7 +10,8 @@ public class PostService {
     @Autowired
     private JPAPostStatusRepository jpaPostStatusRepository;
 
-    public void storeStatus() {
-
+    public String getPostStatus(String token) {
+        return jpaPostStatusRepository.findById(token).get()
+                .getPost_token_status().toString();
     }
 }

@@ -8,11 +8,11 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProducerService {
+public class ProducerMasterService {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    private Logger logger= LoggerFactory.getLogger(ProducerService.class);
+    private Logger logger= LoggerFactory.getLogger(ProducerMasterService.class);
 
     public void sendToken (String token) {
         logger.info("Master Card App send token to Account system!");

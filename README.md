@@ -39,3 +39,10 @@ Open another Terminal window and run the following command from the root of Apac
 - consumer: get status from Post_Status DB, send to MasterCardApp
 
 
+
+## Error Notes
+
+1. Error while fetching metadata with correlation id 1 : {topic=LEADER_NOT_AVAILABLE}
+Solution: https://blog.csdn.net/csdn_xpw/article/details/105179901
+
+2. 

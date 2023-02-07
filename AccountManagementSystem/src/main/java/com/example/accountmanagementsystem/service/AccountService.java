@@ -1,11 +1,8 @@
 package com.example.accountmanagementsystem.service;
 
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.example.accountmanagementsystem.entity.Account;
 import com.example.accountmanagementsystem.entity.Enum.EnumStatus;
-//import com.example.accountmanagementsystem.entity.Token;
 import com.example.accountmanagementsystem.repository.JPAAccountRepository;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -13,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.util.Date;
 import java.util.Optional;
 
 
@@ -33,7 +29,7 @@ public class AccountService {
 
     // AOP: 25'10''; print -> inside code itself, can not see -> log -> log file
     // log file -> shared -> info, warn, error, debug
-    private Logger logger= LoggerFactory.getLogger(AccountService.class);
+    private final Logger logger= LoggerFactory.getLogger(AccountService.class);
 
 
     /**
@@ -49,7 +45,7 @@ public class AccountService {
         jpaAccountRepository.save(account);
         logger.info("The generated id is: " + account.getId());
         return "Register account successfully with generated id " + account.getId()
-                +" the generated token is " + account.getToken();
+                +" !\n the generated token is " + account.getToken();
     }
 
 
