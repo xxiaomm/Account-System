@@ -1,13 +1,13 @@
-package com.example.kafkatest;
+package com.example.mastercardapp.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class KafkaTestApplicationTests {
+public class ConsumerMasterServiceTest {
 
     @Test
-    void contextLoads() {
-    }
+    public void Test() {
 
+    }
 }

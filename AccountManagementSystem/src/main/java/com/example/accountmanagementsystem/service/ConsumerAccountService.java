@@ -44,7 +44,7 @@ public class ConsumerAccountService {
      * receive token from MasterCardApp, find corresponding status, and store in Pos_Status DataBase.
      */
     @KafkaListener(topics = "sendTokenToAccount", groupId = "validateToken")
-    public void validateToken(String token) {
+    public void validateTokenAndSendStatusBack(String token) {
         logger.info("Start validating token...");
         if ( !tokenService.verifyToken(token) || !accountService.verifyAccount(token)) {
             logger.error("Signature has been tampered or No matched user.");
@@ -66,7 +66,7 @@ public class ConsumerAccountService {
 
 
         logger.info("Start sending pos_status back to MasterCardApp...");
-        producerAccountService.sendStatusBack(account.getId(), account.getName(), pos_status.toString());
+        producerAccountService.sendStatusBack(account.getId(), account.getName(), pos_status.getPos_token_status().toString());
     }
 
 

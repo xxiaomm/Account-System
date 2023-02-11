@@ -1,5 +1,6 @@
 package com.example.accountmanagementsystem.controller;
 
+import com.example.accountmanagementsystem.entity.Account;
 import com.example.accountmanagementsystem.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,8 @@ public class AccountController {
 
     /**
      * Check the token is active or inactive (expired or others).
+     * Mary, Maggie, John: 5 days(Feb 7 - Feb 12 17:11:11), others: 30 days
+     * Mia, Ann, Anna, Lily -> signature "TOKEN_SECRET"
      */
     @GetMapping(value="/validate/token")
     public String validateToken(@RequestParam(value="token")String token) {

@@ -12,14 +12,14 @@ public class KafkaAccountController {
     @Autowired
     private ConsumerAccountService consumerAccountService;
 
-    @Autowired
-    private ProducerAccountService producerAccountService;
+//    @Autowired
+//    private ProducerAccountService producerAccountService;
 
 
 
     @PutMapping(value="/account/producer/validate/token")
     public String validateToken(@RequestParam(value="token") String token){
-        consumerAccountService.validateToken(token);
+        consumerAccountService.validateTokenAndSendStatusBack(token);
         return "Validate token and save post status successfully!";
     }
 

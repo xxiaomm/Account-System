@@ -16,8 +16,6 @@ public class ProducerAccountService {
     @Autowired
     private KafkaTemplate <String, String> kafkaTemplate;
 
-    @Autowired
-    private PosService posService;
 
     private final Logger logger= LoggerFactory.getLogger(ProducerAccountService.class);
 

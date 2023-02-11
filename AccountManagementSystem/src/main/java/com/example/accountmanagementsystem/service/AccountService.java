@@ -43,8 +43,9 @@ public class AccountService {
 
         jpaAccountRepository.save(account);
         logger.info("The generated id is: " + account.getId());
-        return "Register successfully with generated id " + account.getId()
-                +" !\n the generated token is " + account.getToken();
+        return account.getId();
+//        return "Register a new account with id " + account.getId() + "successfully!";
+
     }
 
 
